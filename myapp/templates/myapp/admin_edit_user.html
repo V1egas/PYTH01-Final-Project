@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User</title>
+    <link rel="icon" href="{% static 'images/DevelopeDQH.ico' %}">
+    <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* Body Styling */
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* Main Container */
+        .edit-user-wrapper {
+            width: 500px;
+            background: #041a2d;
+            border-radius: 15px;
+            padding: 70px 40px 50px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Header */
+        .edit-user-header {
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #239BFF;
+            text-shadow: 
+                0 0 5px #239BFF,
+                0 0 15px #239BFF;
+            letter-spacing: 1px;
+        }
+
+        /* Form Styling */
+        .edit-user-form {
+            background: rgba(4, 26, 45, 0.95);
+            border-radius: 15px;
+            border: 2px solid rgba(35, 155, 255, 0.3);
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #239BFF;
+            font-size: 1.1rem;
+            text-shadow: 0 0 5px #239BFF;
+        }
+
+        /* Input Fields */
+        .form-group input {
+            width: 100%;
+            padding: 15px 45px 15px 20px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 1rem;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        /*Password Toggle*/
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50px;
+            color: #239BFF;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .password-toggle:hover {
+            color: #fff;
+            text-shadow: 0 0 5px #fff;
+        }
+
+        /* Select Dropdowns */
+        .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(4, 26, 45, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 1rem;
+            color: #fff;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23239BFF'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group select:focus {
+            border-color: #239BFF;
+            box-shadow: 0 0 10px #239BFF;
+            outline: none;
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .save-btn {
+            padding: 15px 30px;
+            background: #239BFF;
+            color: #fff;
+            border: none;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(35, 155, 255, 0.4);
+        }
+
+        .save-btn:hover {
+            background: #1a7bb8;
+            box-shadow: 0 0 15px #239BFF;
+            transform: translateY(-2px);
+        }
+
+        .cancel-btn {
+            padding: 15px 30px;
+            background: transparent;
+            color: #239BFF;
+            border: 2px solid #239BFF;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(35, 155, 255, 0.1);
+            box-shadow: 0 0 10px #239BFF;
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            display: inline-flex;
+            align-items: center;
+            background: rgba(35, 155, 255, 0.1);
+            color: #239BFF;
+            border: 2px solid #239BFF;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(35, 155, 255, 0.2);
+            box-shadow: 0 0 15px #239BFF;
+        }
+
+        /* Password Reset Section */
+        .password-reset-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(35, 155, 255, 0.3);
+        }
+
+        .password-reset-section h3 {
+            color: #239BFF;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #239BFF;
+        }
+
+        .reset-password-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(35, 155, 255, 0.1);
+            color: #239BFF;
+            border: 2px solid #239BFF;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .reset-password-btn:hover {
+            background: rgba(35, 155, 255, 0.2);
+            box-shadow: 0 0 10px #239BFF;
+        }
+
+        .reset-password-btn i {
+            margin-right: 8px;
+        }
+
+        .password-fields {
+            display: none;
+        }
+
+        .password-fields.show {
+            display: block;
+        }
+
+        .generated-password {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(4, 26, 45, 0.7);
+            border: 2px dashed #239BFF;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .generated-password.show {
+            display: block;
+        }
+
+        .password-note {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 10px;
+        }
+
+        /* Placeholder Styling */
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            opacity: 1;
+        }
+
+        :-ms-input-placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        ::-ms-input-placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper edit-user-wrapper">
+        <!-- Back Button -->
+        <a href="{% url 'myapp:admin_dashboard' %}" class="back-btn">
+            <i class='bx bx-arrow-back'></i> Back to Dashboard
+        </a>
+
+        <div class="edit-user-header">
+            <h1>Edit <span class="username">{{ user.username }}</span></h1>
+        </div>
+        
+        <div class="edit-user-form">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="username"><i class='bx bx-user'></i> Username</label>
+                    <input type="text" id="username" name="username" value="{{ user.username }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email"><i class='bx bx-envelope'></i> Email</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="is_active"><i class='bx bx-check-circle'></i> Status</label>
+                    <select id="is_active" name="is_active">
+                        <option value="1" {% if user.is_active %}selected{% endif %}>Active</option>
+                        <option value="0" {% if not user.is_active %}selected{% endif %}>Inactive</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="is_staff"><i class='bx bx-shield'></i> Admin Privileges</label>
+                    <select id="is_staff" name="is_staff">
+                        <option value="1" {% if user.is_staff %}selected{% endif %}>Admin User</option>
+                        <option value="0" {% if not user.is_staff %}selected{% endif %}>Regular User</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="is_superuser"><i class='bx bx-crown'></i> Superuser Status</label>
+                    <select id="is_superuser" name="is_superuser">
+                        <option value="1" {% if user.is_superuser %}selected{% endif %}>Superuser</option>
+                        <option value="0" {% if not user.is_superuser %}selected{% endif %}>Regular Admin</option>
+                    </select>
+                </div>
+                
+                <!-- Password Reset Section -->
+                <div class="password-reset-section">
+                    <h3><i class='bx bx-key'></i> Password Reset</h3>
+                    
+                    <button type="button" class="reset-password-btn" id="initiate-reset">
+                        <i class='bx bx-refresh'></i> Reset User Password
+                    </button>
+                    
+                    <div class="password-note">
+                        <i class='bx bx-info-circle'></i> This will generate a temporary password for the user
+                    </div>
+                    
+                    <div class="password-fields" id="password-fields">
+                        <div class="form-group">
+                            <label for="new_password1">New Password</label>
+                            <input type="password" id="new_password1" name="new_password1" placeholder="Enter new password">
+                            <i class='bx bx-show password-toggle' onclick="togglePassword('new_password1', this)"></i>
+                            <!--<button type="button" class="password-toggle" onclick="togglePassword('new_password1', this)">
+                                <i class='bx bx-show'></i>
+                            </button>-->
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="new_password2">Confirm New Password</label>
+                            <input type="password" id="new_password2" name="new_password2" placeholder="Confirm new password">
+                            <i class='bx bx-show password-toggle' onclick="togglePassword('new_password2', this)"></i>
+                            <!-- <button type="button" class="password-toggle" onclick="togglePassword('new_password2', this)">
+                                <i class='bx bx-show'></i>
+                            </button>-->
+                        </div>
+                        
+                        <div class="generated-password" id="generated-password">
+                            <p>Temporary Password: <span id="temp-password"></span></p>
+                            <p class="password-note">Please provide this to the user securely</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">
+                        <i class='bx bx-save'></i> Save Changes
+                    </button>
+                    <a href="{% url 'myapp:admin_dashboard' %}" class="cancel-btn">
+                        <i class='bx bx-x'></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('bx-show');
+                icon.classList.add('bx-hide');
+            } else {
+                input.type = "password";
+                icon.classList.remove('bx-hide');
+                icon.classList.add('bx-show');
+            }
+        }
+        document.getElementById('initiate-reset').addEventListener('click', function() {
+            const passwordFields = document.getElementById('password-fields');
+            const generatedPassword = document.getElementById('generated-password');
+            
+            // Show password fields
+            passwordFields.classList.add('show');
+            
+            // Generate a temporary password
+            const tempPassword = generateTempPassword();
+            document.getElementById('temp-password').textContent = tempPassword;
+            
+            // Set the generated password in the form fields
+            document.getElementById('new_password1').value = tempPassword;
+            document.getElementById('new_password2').value = tempPassword;
+            
+            // Show the generated password
+            generatedPassword.classList.add('show');
+        });
+
+    /*    function generateTempPassword() {
+            const chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*?-+.:;_';
+            let password = '';
+            for (let i = 0; i < 12; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return password;
+        }*/
+        
+        function generateTempPassword() {
+            const letters = 'ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            const numbers = '1234567890';
+            const symbols = '!@#$%^&*?-+.:;_';
+            
+            let password = [
+                numbers.charAt(Math.floor(Math.random() * numbers.length)),
+                symbols.charAt(Math.floor(Math.random() * symbols.length))
+            ];
+            
+            const allChars = letters + numbers + symbols;
+                for (let i = 2; i < 12; i++) {
+                    password.push(allChars.charAt(Math.floor(Math.random() * allChars.length)));
+                }
+        password = password.sort(() => Math.random() - 0.5).join('');
+    
+        return password;
+    }
+    </script>
+</body>
+</html>

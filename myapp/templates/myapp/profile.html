@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="icon" href="{% static 'images/DevelopeDQH.ico' %}">
+    <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /*Main*/
+        .home-wrapper {
+            width: 500px;
+            min-height: 500px;
+            padding: 70px 40px 50px;
+            position: relative;
+        }
+        
+        /* Header */
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 0 0 40px;
+            color: #239BFF;
+            text-shadow: 
+                0 0 5px #239BFF,
+                0 0 15px #239BFF;
+            letter-spacing: 1px;
+        }
+        
+        /* Logout Button */
+        .logout-top {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 10;
+        }
+        
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(35, 155, 255, 0.1);
+            color: #239BFF;
+            border: 2px solid #239BFF;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(35, 155, 255, 0.2);
+            box-shadow: 0 0 15px #239BFF;
+        }
+        
+        /* Profile Info Box*/
+        .profile-info {
+            background: rgba(4, 26, 45, 0.9);
+            border-radius: 15px;
+            border: 2px solid rgba(35, 155, 255, 0.3);
+            padding: 35px 30px;
+            margin-bottom: 40px;
+            min-height: 250px;
+        }
+        
+        .profile-details {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            row-gap: 25px;
+            align-items: center;
+        }
+        
+        .profile-details strong {
+            color: #239BFF;
+            font-size: 1.3rem;
+            text-shadow: 0 0 5px #239BFF;
+        }
+        
+        .profile-details span {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.3rem;
+        }
+        
+        /* Action Buttons */
+        .profile-actions {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .home-button {
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            min-width: 120px;
+        }
+        
+        .admin-button {
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            min-width: 120px;
+            background: rgba(255, 193, 7, 0.1);
+            color: #FFC107;
+            border: 2px solid #FFC107;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .admin-button:hover {
+            background: rgba(255, 193, 7, 0.2);
+            box-shadow: 0 0 15px #FFC107;
+        }
+        
+        .admin-button i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper home-wrapper">
+        <!-- Logout Button -->
+        <div class="logout-top">
+            <a href="{% url 'myapp:logout' %}" class="logout-btn">
+                <i class='bx bx-log-out'></i> Logout
+            </a>
+        </div>
+
+        <h1>User <span class="username">Profile</span></h1>
+        
+        <!-- Profile Info-->
+        <div class="profile-info">
+            <div class="profile-details">
+                <strong>Username:</strong>
+                <span>{{ user.username }}</span>
+                
+                <strong>Email:</strong>
+                <span>{{ user.email|default:"Not provided" }}</span>
+                
+                <strong>Member since:</strong>
+                <span>{{ user.date_joined|date:"F j, Y" }}</span>
+                
+                {% if user.is_superuser or user.is_staff %}
+                <strong>Role:</strong>
+                <span style="color: #FFC107; text-shadow: 0 0 5px #FFC107;">Administrator</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="{% url 'myapp:index' %}" class="home-button">
+                <i class='bx bx-home'></i> Home
+            </a>
+            <a href="{% url 'myapp:settings' %}" class="home-button">
+                <i class='bx bx-cog'></i> Settings
+            </a>
+            {% if user.is_superuser or user.is_staff %}
+            <a href="{% url 'myapp:admin_dashboard' %}" class="admin-button">
+                <i class='bx bx-shield-alt-2'></i> Admin Panel
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

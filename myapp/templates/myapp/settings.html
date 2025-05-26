@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings</title>
+    <link rel="icon" href="{% static 'images/DevelopeDQH.ico' %}">
+    <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* Main Container */
+        .settings-wrapper {
+            width: 500px;
+            padding: 70px 40px 50px;
+            position: relative;
+        }
+
+        /* Header */
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 0 0 40px;
+            color: #239BFF;
+            text-shadow:
+                0 0 5px #239BFF,
+                0 0 15px #239BFF;
+            letter-spacing: 1px;
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            z-index: 10;
+            display: inline-flex;
+            align-items: center;
+            background: rgba(35, 155, 255, 0.1);
+            color: #239BFF;
+            border: 2px solid #239BFF;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(35, 155, 255, 0.2);
+            box-shadow: 0 0 15px #239BFF;
+        }
+
+        /* Settings Sections */
+        .settings-section {
+            background: rgba(4, 26, 45, 0.9);
+            border-radius: 15px;
+            border: 2px solid rgba(35, 155, 255, 0.3);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .settings-section h2 {
+            color: #239BFF;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            text-shadow: 0 0 5px #239BFF;
+        }
+
+        /* Input Fields */
+        .settings-input {
+            margin-bottom: 25px;
+        }
+
+        .settings-input label {
+            display: block;
+            margin-bottom: 10px;
+            color: #239BFF;
+            font-size: 1.1rem;
+        }
+
+        .settings-input input {
+            width: 100%;
+            padding: 15px 20px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 1rem;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .settings-input input:focus {
+            border-color: #239BFF;
+            box-shadow: 0 0 10px #239BFF;
+        }
+
+        /* Save Buttons */
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            background: #239BFF;
+            border: none;
+            border-radius: 40px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(35, 155, 255, 0.4);
+        }
+
+        .save-btn:hover {
+            background: #1a7bb8;
+            box-shadow: 0 0 15px #239BFF;
+            transform: translateY(-2px);
+        }
+
+        /* Current Info */
+        .current-info {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        /* Message Notifications */
+        .message-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .message {
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(4, 26, 45, 0.95);
+            border: 1px solid rgba(35, 155, 255, 0.3);
+            box-shadow: 0 0 15px rgba(35, 155, 255, 0.3);
+            animation: slideIn 0.3s ease-out;
+            color: white;
+        }
+
+        .message-error {
+            border-color: rgba(255, 50, 50, 0.5);
+            box-shadow: 0 0 15px rgba(255, 50, 50, 0.3);
+        }
+
+        .message-success {
+            border-color: rgba(0, 200, 83, 0.5);
+            box-shadow: 0 0 15px rgba(0, 200, 83, 0.3);
+        }
+
+        .message-close {
+            background: transparent;
+            border: none;
+            color: #239BFF;
+            cursor: pointer;
+            margin-left: 15px;
+            font-size: 1.2rem;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Message Notifications Container -->
+    <div class="message-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message message-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">
+                    <span>{{ message }}</span>
+                    <button class="message-close" onclick="this.parentElement.remove()">
+                        <i class='bx bx-x'></i>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="wrapper settings-wrapper">
+        <!-- Back Button -->
+        <a href="{% url 'myapp:profile' %}" class="back-btn">
+            <i class='bx bx-arrow-back'></i> Back
+        </a>
+
+        <h1>Account <span class="username">Settings</span></h1>
+
+        <!-- Email Change Section -->
+        <div class="settings-section">
+            <h2>Change Email Address</h2>
+            <div class="current-info">
+                Current email: <strong>{{ user.email }}</strong>
+            </div>
+
+            <form method="post" action="{% url 'myapp:change_email' %}">
+                {% csrf_token %}
+                <div class="settings-input">
+                    <label for="new_email">New Email</label>
+                    <input type="email" id="new_email" name="new_email" required>
+                </div>
+
+                <div class="settings-input">
+                    <label for="confirm_email">Confirm New Email</label>
+                    <input type="email" id="confirm_email" name="confirm_email" required>
+                </div>
+
+                <div class="settings-input">
+                    <label for="email_password">Current Password</label>
+                    <input type="password" id="email_password" name="password" required>
+                </div>
+
+                <button type="submit" class="save-btn">Update Email</button>
+            </form>
+        </div>
+
+        <!-- Password Change Section -->
+        <div class="settings-section">
+            <h2>Change Password</h2>
+            <form method="post" action="{% url 'myapp:change_password' %}">
+                {% csrf_token %}
+                <div class="settings-input">
+                    <label for="current_password">Current Password</label>
+                    <input type="password" id="current_password" name="current_password" required>
+                </div>
+
+                <div class="settings-input">
+                    <label for="new_password">New Password</label>
+                    <input type="password" id="new_password" name="new_password" required>
+                </div>
+
+                <div class="settings-input">
+                    <label for="confirm_password">Confirm New Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
+
+                <button type="submit" class="save-btn">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        //hide messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(msg => {
+                setTimeout(() => {
+                    msg.style.opacity = '0';
+                    setTimeout(() => msg.remove(), 300);
+                }, 5000);
+            });
+        });
+
+        //Password strength validation
+        document.getElementById('new_password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthIndicator = document.createElement('div');
+            strengthIndicator.style.marginTop = '5px';
+            strengthIndicator.style.fontSize = '0.8rem';
+            
+            // Remove any existing indicator
+            const existingIndicator = this.parentNode.querySelector('.password-strength');
+            if (existingIndicator) {
+                existingIndicator.remove();
+            }
+            
+            if (password.length > 0) {
+                let strength = 0;
+                if (password.length >= 8) strength++;
+                if (password.match(/[A-Z]/)) strength++;
+                if (password.match(/[0-9]/)) strength++;
+                if (password.match(/[^A-Za-z0-9]/)) strength++;
+                
+                let strengthText = '';
+                let strengthColor = '';
+                
+                switch(strength) {
+                    case 0:
+                    case 1:
+                        strengthText = 'Weak';
+                        strengthColor = '#ff3232';
+                        break;
+                    case 2:
+                        strengthText = 'Moderate';
+                        strengthColor = '#ffcc00';
+                        break;
+                    case 3:
+                        strengthText = 'Strong';
+                        strengthColor = '#00cc66';
+                        break;
+                    case 4:
+                        strengthText = 'Very Strong';
+                        strengthColor = '#239BFF';
+                        break;
+                }
+                
+                strengthIndicator.textContent = `Password strength: ${strengthText}`;
+                strengthIndicator.style.color = strengthColor;
+                strengthIndicator.className = 'password-strength';
+                this.parentNode.appendChild(strengthIndicator);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Delete</title>
+    <link rel="icon" href="{% static 'images/DevelopeDQH.ico' %}">
+    <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+</head>
+<body>
+    <div class="wrapper">
+        <h1>Delete User</h1>
+        <p>Are you sure you want to delete user <strong>{{ user.username }}</strong>?</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Yes, Delete</button>
+            <a href="{% url 'myapp:admin_dashboard' %}">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

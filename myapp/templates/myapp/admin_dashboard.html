@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="icon" href="{% static 'images/DevelopeDQH.ico' %}">
+    <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .admin-wrapper {
+            width: 90%;
+            max-width: 1200px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .admin-section {
+            background: rgba(4, 26, 45, 0.9);
+            border-radius: 15px;
+            border: 2px solid rgba(35, 155, 255, 0.3);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .admin-section h2 {
+            color: #239BFF;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            text-shadow: 0 0 5px #239BFF;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .user-table th, .user-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(35, 155, 255, 0.2);
+        }
+
+        .user-table th {
+            color: #239BFF;
+            font-weight: 600;
+        }
+
+        .user-table tr:hover {
+            background: rgba(35, 155, 255, 0.05);
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+
+        .edit-btn {
+            background: rgba(35, 155, 255, 0.1);
+            color: #239BFF;
+            border: 1px solid #239BFF;
+        }
+
+        .delete-btn {
+            background: rgba(255, 50, 50, 0.1);
+            color: #ff3232;
+            border: 1px solid #ff3232;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .search-bar {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 15px 20px 15px 45px;
+            background: rgba(4, 26, 45, 0.7);
+            border: 2px solid rgba(35, 155, 255, 0.3);
+            border-radius: 40px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #239BFF;
+            font-size: 1.2rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .page-btn {
+            padding: 8px 15px;
+            background: rgba(35, 155, 255, 0.1);
+            color: #239BFF;
+            border: 1px solid #239BFF;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn.active {
+            background: #239BFF;
+            color: #fff;
+        }
+
+        .page-btn:hover:not(.active) {
+            background: rgba(35, 155, 255, 0.2);
+            box-shadow: 0 0 10px #239BFF;
+        }
+        /*Message Notification*/
+        .message-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        max-width: 400px;
+    }
+
+    .message {
+        padding: 15px 20px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(4, 26, 45, 0.95);
+        border: 1px solid rgba(35, 155, 255, 0.3);
+        box-shadow: 0 0 15px rgba(35, 155, 255, 0.3);
+        animation: slideIn 0.3s ease-out;
+        color: white;
+    }
+
+    .message-error {
+        border-color: rgba(255, 50, 50, 0.5);
+        box-shadow: 0 0 15px rgba(255, 50, 50, 0.3);
+    }
+
+    .message-success {
+        border-color: rgba(0, 200, 83, 0.5);
+        box-shadow: 0 0 15px rgba(0, 200, 83, 0.3);
+    }
+
+    .message-close {
+        background: transparent;
+        border: none;
+        color: #239BFF;
+        cursor: pointer;
+        margin-left: 15px;
+        font-size: 1.2rem;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="message message-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">
+            <span>{{ message }}</span>
+            <button class="message-close" onclick="this.parentElement.remove()">
+                <i class='bx bx-x'></i>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="wrapper admin-wrapper">
+        <!--Admin Header-->
+        <div class="admin-header">
+            <h1>Admin <span class="username">Dashboard</span></h1>
+            <div class="admin-actions">
+                <a href="{% url 'myapp:profile' %}" class="home-button">
+                    <i class='bx bx-user'></i> Profile
+                </a>
+                <a href="{% url 'myapp:logout' %}" class="logout-button">
+                    <i class='bx bx-log-out'></i> Logout
+                </a>
+            </div>
+        </div>
+    
+        <!--Management Section-->
+        <div class="admin-section">
+            <h2><i class='bx bx-group'></i> User Management</h2>
+
+            <div class="search-bar">
+                <i class='bx bx-search'></i>
+                <input type="text" placeholder="Search users...">
+            </div>
+
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Joined</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email|default:"-" }}</td>
+                        <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                        <td>
+                            {% if user.is_active %}
+                                <span style="color: #00ff00;">Active</span>
+                            {% else %}
+                                <span style="color: #ff3232;">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'myapp:admin_edit_user' user.id %}" class="action-btn edit-btn">
+                                <i class='bx bx-edit'></i> Edit
+                            </a>
+                            <a href="{% url 'myapp:admin_delete_user' user.id %}" class="action-btn delete-btn">
+                                <i class='bx bx-trash'></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                {% if users.has_previous %}
+                    <a href="?page=1" class="page-btn"><i class='bx bx-first-page'></i></a>
+                    <a href="?page={{ users.previous_page_number }}" class="page-btn"><i class='bx bx-chevron-left'></i></a>
+                {% endif %}
+
+                {% for num in users.paginator.page_range %}
+                    {% if users.number == num %}
+                        <span class="page-btn active">{{ num }}</span>
+                    {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
+                        <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if users.has_next %}
+                    <a href="?page={{ users.next_page_number }}" class="page-btn"><i class='bx bx-chevron-right'></i></a>
+                    <a href="?page={{ users.paginator.num_pages }}" class="page-btn"><i class='bx bx-last-page'></i></a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!--Stats-->
+        <div class="admin-section">
+            <h2><i class='bx bx-stats'></i> System Statistics</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p style="font-size: 2rem; color: #239BFF;">{{ total_users }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Today</h3>
+                    <p style="font-size: 2rem; color: #239BFF;">{{ active_today }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>New This Week</h3>
+                    <p style="font-size: 2rem; color: #239BFF;">{{ new_this_week }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".search-bar input");
+        const tableRows = document.querySelectorAll(".user-table tbody tr");
+
+        searchInput.addEventListener("input", function () {
+            const query = this.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const username = row.children[1].textContent.toLowerCase();
+                const email = row.children[2].textContent.toLowerCase();
+
+                if (username.includes(query) || email.includes(query)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    });
+    //Hide message after 5 s
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(msg => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            }, 5000);
+        });
+    });
+
+    </script>
+</body>
+</html>
