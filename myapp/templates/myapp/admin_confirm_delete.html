@@ -6,16 +6,130 @@
     <title>Confirm Delete</title>
     <link rel="icon" href="{% static 'images/DevelopeDQH.ico' %}">
     <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .delete-confirm-wrapper {
+            width: 500px;
+            background: #041a2d;
+            border-radius: 15px;
+            padding: 70px 40px 50px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .delete-confirm-wrapper h1 {
+            font-size: 2rem;
+            color: #ff4757;
+            text-shadow: 
+                0 0 5px #ff4757,
+                0 0 15px #ff4757;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .delete-confirm-wrapper p {
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .delete-confirm-wrapper strong {
+            color: #ff4757;
+            text-shadow: 0 0 5px #ff4757;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .delete-btn {
+            padding: 15px 30px;
+            background: #ff4757;
+            color: #fff;
+            border: none;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        .delete-btn:hover {
+            background: #e8413f;
+            box-shadow: 0 0 15px #ff4757;
+            transform: translateY(-2px);
+        }
+
+        .cancel-btn {
+            padding: 15px 30px;
+            background: transparent;
+            color: #ff4757;
+            border: 2px solid #ff4757;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(255, 71, 87, 0.1);
+            box-shadow: 0 0 10px #ff4757;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 71, 87, 0.1);
+            color: #ff4757;
+            border: 2px solid #ff4757;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 71, 87, 0.2);
+            box-shadow: 0 0 15px #ff4757;
+        }
+
+        .back-btn i {
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
-    <div class="wrapper">
+    <div class="delete-confirm-wrapper">
+        <!-- Back Button -->
+        <a href="{% url 'myapp:admin_dashboard' %}" class="back-btn">
+            <i class='bx bx-arrow-back'></i> Back to Dashboard
+        </a>
+
         <h1>Delete User</h1>
         <p>Are you sure you want to delete user <strong>{{ user.username }}</strong>?</p>
 
         <form method="post">
             {% csrf_token %}
-            <button type="submit">Yes, Delete</button>
-            <a href="{% url 'myapp:admin_dashboard' %}">Cancel</a>
+            <div class="form-actions">
+                <button type="submit" class="delete-btn">
+                    <i class='bx bx-trash'></i> Yes, Delete
+                </button>
+                <a href="{% url 'myapp:admin_dashboard' %}" class="cancel-btn">
+                    <i class='bx bx-x'></i> Cancel
+                </a>
+            </div>
         </form>
     </div>
 </body>
